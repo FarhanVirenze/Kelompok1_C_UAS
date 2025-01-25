@@ -1,4 +1,4 @@
-# LAPORAN AKHIR PAW
+# LAPORAN AKHIR PAW  
 **PERANCANGAN DAN PEMBUATAN**  
 **WEBSITE STREAMING MOVIES DAN SERIES**  
 
@@ -20,8 +20,10 @@
 **UNIVERSITAS MUHAMMADIYAH YOGYAKARTA**  
 **2025**  
 
+---
 
-**Link Report: https://docs.google.com/document/d/15OVhbmBrirSMAdrlY1bySnymWu1CU60D/edit?usp=sharing&ouid=108812523506611172388&rtpof=true&sd=true**  
-**Link Database: https://drive.google.com/file/d/1n5NxiHHbOjDPYCwACmE-1XiNV4WPJR_l/view?usp=sharing**  
-**Link Testing Admin: https://github.com/FarhanVirenze/TestingAdmin.git**
-**Link Testing User: https://github.com/FarhanVirenze/TestingUser.git**
+### **Links**  
+- **Report**: [Google Docs Report](https://docs.google.com/document/d/15OVhbmBrirSMAdrlY1bySnymWu1CU60D/edit?usp=sharing&ouid=108812523506611172388&rtpof=true&sd=true)  
+- **Database**: [Google Drive Database](https://drive.google.com/file/d/1n5NxiHHbOjDPYCwACmE-1XiNV4WPJR_l/view?usp=sharing)  
+- **Testing Admin**: [GitHub Repository](https://github.com/FarhanVirenze/TestingAdmin.git)  
+- **Testing User**: [GitHub Repository](https://github.com/FarhanVirenze/TestingUser.git)  
