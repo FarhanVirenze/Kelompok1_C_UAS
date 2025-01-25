@@ -21,4 +21,4 @@
 **2025**  
 
 
-Link Report https://umyac-my.sharepoint.com/:w:/g/personal/muhamad_farhan_ft22_mail_umy_ac_id/ERPmMzhLnohNjSzPJ1NTpdQBlB1kUbIEnwdTYCQzGWIxCQ?e=FDiLAo
+Link Report https://docs.google.com/document/d/15OVhbmBrirSMAdrlY1bySnymWu1CU60D/edit?usp=sharing&ouid=108812523506611172388&rtpof=true&sd=true
