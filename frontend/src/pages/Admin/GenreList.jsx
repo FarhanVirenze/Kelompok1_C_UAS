@@ -25,7 +25,7 @@ const GenreList = () => {
     e.preventDefault();
 
     if (!name) {
-      toast.error("Genre name is required");
+      toast.error("Genre name is required", { theme: "dark" });
       return;
     }
 
@@ -33,15 +33,15 @@ const GenreList = () => {
       const result = await createGenre({ name }).unwrap();
 
       if (result.error) {
-        toast.error(result.error);
+        toast.error(result.error, { theme: "dark" });
       } else {
         setName("");
-        toast.success(`${result.name} is created.`);
+        toast.success(`${result.name} is created.`, { theme: "dark" });
         refetch();
       }
     } catch (error) {
       console.error(error);
-      toast.error("Creating genre failed, try again.");
+      toast.error("Creating genre failed, try again.", { theme: "dark" });
     }
   };
 
@@ -49,7 +49,7 @@ const GenreList = () => {
     e.preventDefault();
 
     if (!updateGenre) {
-      toast.error("Genre name is required");
+      toast.error("Genre name is required", { theme: "dark" });
       return;
     }
 
@@ -62,9 +62,9 @@ const GenreList = () => {
       }).unwrap();
 
       if (result.error) {
-        toast.error(result.error);
+        toast.error(result.error, { theme: "dark" });
       } else {
-        toast.success(`${result.name} is updated`);
+        toast.success(`${result.name} is updated`, { theme: "dark" });
         refetch();
         setSelectedGenre(null);
         setUpdatingName("");
@@ -75,63 +75,71 @@ const GenreList = () => {
     }
   };
 
-  const handleDeleteGenre = async () => {
-    try {
-      const result = await deleteGenre(selectedGenre._id).unwrap();
+  const handleDeleteGenre = async (e) => {
+    e.preventDefault();
+    if (window.confirm("Are you sure you want to delete this genre?")) {
+        try {
+        const result = await deleteGenre(selectedGenre._id).unwrap();
 
-      if (result.error) {
-        toast.error(result.error);
-      } else {
-        toast.success(`${result.name} is deleted.`);
-        refetch();
-        setSelectedGenre(null);
-        setModalVisible(false);
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Genre deletion failed. Tray again.");
+        if (result.error) {
+            toast.error(result.error, { theme: "dark" });
+        } else {
+            toast.success(`${result.name} is deleted.`, { theme: "dark" });
+            refetch();
+            setSelectedGenre(null);
+            setModalVisible(false);
+        }
+        } catch (error) {
+        console.error(error);
+        toast.error("Genre deletion failed. Try again.", { theme: "dark" });
+        }
     }
   };
 
   return (
-    <div className="ml-[10rem] flex flex-col md:flex-row">
-      <div className="md:w-3/4 p-3">
-        <h1 className="h-12">Manage Genres</h1>
-        <GenreForm
-          value={name}
-          setValue={setName}
-          handleSubmit={handleCreateGenre}
-        />
+    <div className="transition-colors duration-500">
+      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 border-l-4 border-[#007aff] dark:border-[#00f2fe] pl-4 transition-colors duration-500">Manage Genres</h1>
 
-        <br />
+      <div className="max-w-4xl liquid-glass rounded-2xl p-8">
+        <div className="mb-10 pb-8 border-b border-gray-200 dark:border-white/10 transition-colors duration-500">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 transition-colors duration-500">Create New Genre</h2>
+            <GenreForm
+            value={name}
+            setValue={setName}
+            handleSubmit={handleCreateGenre}
+            />
+        </div>
 
-        <div className="flex flex-wrap">
-          {genres?.map((genre) => (
-            <div key={genre._id}>
-              <button
-                className="bg-white border border-teal-500 text-teal-500 py-2 px-4 rounded-lg m-3 hover:bg-teal-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-opacity-50"
+        <div>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 transition-colors duration-500">Available Genres</h2>
+            <div className="flex flex-wrap gap-3">
+            {genres?.map((genre) => (
+                <button
+                key={genre._id}
+                className="pill-inactive font-medium py-2 px-5 rounded-full hover:pill-active transition-all duration-300"
                 onClick={() => {
-                  {
                     setModalVisible(true);
                     setSelectedGenre(genre);
                     setUpdatingName(genre.name);
-                  }
                 }}
-              >
+                >
                 {genre.name}
-              </button>
+                </button>
+            ))}
             </div>
-          ))}
         </div>
 
         <Modal isOpen={modalVisible} onClose={() => setModalVisible(false)}>
-          <GenreForm
-            value={updatingName}
-            setValue={(value) => setUpdatingName(value)}
-            handleSubmit={handleUpdateGenre}
-            buttonText="Update"
-            handleDelete={handleDeleteGenre}
-          />
+          <div className="p-6 liquid-glass rounded-2xl w-full max-w-md mx-auto">
+             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 transition-colors duration-500">Update Genre</h2>
+            <GenreForm
+                value={updatingName}
+                setValue={(value) => setUpdatingName(value)}
+                handleSubmit={handleUpdateGenre}
+                buttonText="Update"
+                handleDelete={handleDeleteGenre}
+            />
+          </div>
         </Modal>
       </div>
     </div>

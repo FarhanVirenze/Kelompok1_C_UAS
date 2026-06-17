@@ -35,12 +35,11 @@ const CreateMovie = () => {
   const { data: genres, isLoading: isLoadingGenres } = useFetchGenresQuery();
 
   useEffect(() => {
-    if (genres) {
+    if (genres && genres.length > 0) {
       setMovieData((prevData) => ({
         ...prevData,
         genre: genres[0]?._id || "",
       }));
-      console.log(genres[0]?._id);
     }
   }, [genres]);
 
@@ -48,8 +47,7 @@ const CreateMovie = () => {
     const { name, value } = e.target;
 
     if (name === "genre") {
-      const selectedGenre = genres.find((genre) => genre.name === value);
-
+      const selectedGenre = genres.find((genre) => genre._id === value);
       setMovieData((prevData) => ({
         ...prevData,
         genre: selectedGenre ? selectedGenre._id : "",
@@ -67,7 +65,8 @@ const CreateMovie = () => {
     setSelectedImage(file);
   };
 
-  const handleCreateMovie = async () => {
+  const handleCreateMovie = async (e) => {
+    e.preventDefault();
     try {
       if (
         !movieData.name ||
@@ -76,7 +75,7 @@ const CreateMovie = () => {
         !movieData.cast ||
         !selectedImage
       ) {
-        toast.error("Please fill all required fields");
+        toast.error("Please fill all required fields", { theme: "dark" });
         return;
       }
 
@@ -91,8 +90,7 @@ const CreateMovie = () => {
         if (uploadImageResponse.data) {
           uploadedImagePath = uploadImageResponse.data.image;
         } else {
-          console.error("Failed to upload image: ", uploadImageErrorDetails);
-          toast.error("Failed to upload image");
+          toast.error("Failed to upload image", { theme: "dark" });
           return;
         }
 
@@ -113,125 +111,139 @@ const CreateMovie = () => {
           genre: "",
         });
 
-        toast.success("Movie Added To Database");
+        toast.success("Movie Added To Database", { theme: "dark" });
       }
     } catch (error) {
-      console.error("Failed to create movie: ", createMovieErrorDetail);
-      toast.error(`Failed to create movie: ${createMovieErrorDetail?.message}`);
+      toast.error(`Failed to create movie: ${createMovieErrorDetail?.message}`, { theme: "dark" });
     }
   };
 
   return (
-    <div className="container flex justify-center items-center mt-4">
-      <form>
-        <p className="text-green-200 w-[50rem] text-2xl mb-4">Create Movie</p>
-        <div className="mb-4">
-          <label className="block">
-            Name:
-            <input
-              type="text"
-              name="name"
-              value={movieData.name}
-              onChange={handleChange}
-              className="border px-2 py-1 w-full"
-            />
-          </label>
-        </div>
-        <div className="mb-4">
-          <label className="block">
-            Year:
-            <input
-              type="number"
-              name="year"
-              value={movieData.year}
-              onChange={handleChange}
-              className="border px-2 py-1 w-full"
-            />
-          </label>
-        </div>
-        <div className="mb-4">
-          <label className="block">
-            Detail:
+    <div className="transition-colors duration-500">
+      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 border-l-4 border-[#007aff] dark:border-[#00f2fe] pl-4 transition-colors duration-500">Create Movie</h1>
+
+      <div className="liquid-glass p-8 max-w-4xl mx-auto rounded-2xl">
+        <form onSubmit={handleCreateMovie} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2 transition-colors duration-500">Name</label>
+              <input
+                type="text"
+                name="name"
+                value={movieData.name}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all duration-300"
+                placeholder="Movie Title"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2 transition-colors duration-500">Year</label>
+              <input
+                type="number"
+                name="year"
+                value={movieData.year}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all duration-300"
+                placeholder="Release Year"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2 transition-colors duration-500">Detail</label>
             <textarea
               name="detail"
               value={movieData.detail}
               onChange={handleChange}
-              className="border px-2 py-1 w-full"
+              rows="4"
+              className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all duration-300 resize-none"
+              placeholder="Movie description..."
             ></textarea>
-          </label>
-        </div>
-        <div className="mb-4">
-          <label className="block">
-            Cast (comma-separated):
-            <input
-              type="text"
-              name="cast"
-              value={movieData.cast.join(", ")}
-              onChange={(e) =>
-                setMovieData({ ...movieData, cast: e.target.value.split(", ") })
-              }
-              className="border px-2 py-1 w-full"
-            />
-          </label>
-        </div>
-        <div className="mb-4">
-          <label className="block">
-            Genre:
-            <select
-              name="genre"
-              value={movieData.genre}
-              onChange={handleChange}
-              className="border px-2 py-1 w-full"
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2 transition-colors duration-500">Cast (comma-separated)</label>
+              <input
+                type="text"
+                name="cast"
+                value={movieData.cast.join(", ")}
+                onChange={(e) =>
+                  setMovieData({ ...movieData, cast: e.target.value.split(", ") })
+                }
+                className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all duration-300"
+                placeholder="Actor 1, Actor 2"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2 transition-colors duration-500">Genre</label>
+              <select
+                name="genre"
+                value={movieData.genre}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all duration-300 appearance-none"
+              >
+                {isLoadingGenres ? (
+                  <option>Loading genres...</option>
+                ) : (
+                  genres?.map((genre) => (
+                    <option key={genre._id} value={genre._id}>
+                      {genre.name}
+                    </option>
+                  ))
+                )}
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2 transition-colors duration-500">Movie Poster</label>
+            <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-white/10 border-dashed rounded-xl hover:border-[#007aff] dark:hover:border-[#00f2fe] transition-colors bg-gray-50/50 dark:bg-[#15151c]/50">
+              <div className="space-y-1 text-center">
+                <svg
+                  className="mx-auto h-12 w-12 text-gray-400"
+                  stroke="currentColor"
+                  fill="none"
+                  viewBox="0 0 48 48"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <div className="flex text-sm text-gray-500 justify-center">
+                  <label className="relative cursor-pointer bg-transparent rounded-md font-medium text-[#007aff] dark:text-[#00f2fe] hover:text-[#5856d6] dark:hover:text-[#8a2be2] transition-colors focus-within:outline-none">
+                    <span>Upload a file</span>
+                    <input type="file" accept="image/*" onChange={handleImageChange} className="sr-only" />
+                  </label>
+                  <p className="pl-1">or drag and drop</p>
+                </div>
+                <p className="text-xs text-gray-400">PNG, JPG, GIF up to 10MB</p>
+                {selectedImage && (
+                  <p className="text-sm text-[#007aff] dark:text-[#00f2fe] mt-2">{selectedImage.name}</p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="pt-4">
+            <button
+              type="submit"
+              className="w-full md:w-auto bg-gradient-to-r from-[#007aff] to-[#34c759] dark:from-[#00f2fe] dark:to-[#8a2be2] text-white font-bold py-3 px-8 rounded-xl hover:opacity-90 transition-all shadow-lg"
+              disabled={isCreatingMovie || isUploadingImage}
             >
-              {isLoadingGenres ? (
-                <option>Loading genres...</option>
-              ) : (
-                genres.map((genre) => (
-                  <option key={genre.id} value={genre.id}>
-                    {genre.name}
-                  </option>
-                ))
-              )}
-            </select>
-          </label>
-        </div>
-
-        <div className="mb-4">
-          <label
-            style={
-              !selectedImage
-                ? {
-                    border: "1px solid #888",
-                    borderRadius: "5px",
-                    padding: "8px",
-                  }
-                : {
-                    border: "0",
-                    borderRadius: "0",
-                    padding: "0",
-                  }
-            }
-          >
-            {!selectedImage && "Upload Image"}
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              style={{ display: !selectedImage ? "none" : "block" }}
-            />
-          </label>
-        </div>
-
-        <button
-          type="button"
-          onClick={handleCreateMovie}
-          className="bg-teal-500 text-white px-4 py-2 rounded"
-          disabled={isCreatingMovie || isUploadingImage}
-        >
-          {isCreatingMovie || isUploadingImage ? "Creating..." : "Create Movie"}
-        </button>
-      </form>
+              {isCreatingMovie || isUploadingImage ? "Processing..." : "Create Movie"}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
+
 export default CreateMovie;

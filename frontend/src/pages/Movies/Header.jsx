@@ -1,29 +1,25 @@
 import SliderUtil from "../../component/SliderUtil";
 import { useGetNewMoviesQuery } from "../../redux/api/movies";
-import { Link } from "react-router-dom";
 
 const Header = () => {
-  const { data } = useGetNewMoviesQuery();
+  const { data, isLoading } = useGetNewMoviesQuery();
+
+  if (isLoading) {
+    return (
+      <div className="w-full h-[50vh] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-[#007aff] dark:border-[#00f2fe]"></div>
+      </div>
+    );
+  }
 
   return (
-    <div className="flex flex-col mt-[2rem] ml-[2rem] md:flex-row justify-between items-center md:items-start">
-      <nav className="w-full md:w-[10rem] ml-0 md:ml-2 mb-4 md:mb-0">
-        <Link
-          to="/"
-          className="transition duration-300 ease-in-out hover:bg-teal-200  block p-2 rounded mb-1 md:mb-2 text-lg"
-        >
-          Home
-        </Link>
-        <Link
-          to="/movies"
-          className="transition duration-300 ease-in-out hover:bg-teal-200  block p-2 rounded mb-1 md:mb-2 text-lg"
-        >
-          Browse Movies
-        </Link>
-      </nav>
-
-      <div className="w-full md:w-[80%] mr-0 md:mr-2">
-        <SliderUtil data={data} />
+    <div className="w-full relative px-4 md:px-12 pt-28 pb-6 md:pt-26 overflow-hidden transition-colors duration-500">
+      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-gray-200 to-transparent dark:from-[#0f0f14] dark:to-transparent opacity-80 dark:opacity-50 z-0 transition-colors duration-500"></div>
+      <div className="relative z-10 w-full animate-slide-up">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white border-l-4 border-[#007aff] dark:border-[#00f2fe] pl-3 transition-colors duration-500">New Releases</h2>
+        <div className="w-full">
+          <SliderUtil data={data} />
+        </div>
       </div>
     </div>
   );

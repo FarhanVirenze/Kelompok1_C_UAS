@@ -1,19 +1,29 @@
-const SecondaryCard = ({ pill, content, info, gradient }) => {
+import { AiOutlineUser, AiOutlineComment, AiOutlineVideoCamera } from "react-icons/ai";
+
+const SecondaryCard = ({ pill, content, info, gradient, icon }) => {
+  const IconComponent = 
+    icon === 'user' ? AiOutlineUser :
+    icon === 'comment' ? AiOutlineComment :
+    AiOutlineVideoCamera;
+
   return (
-    <div
-      className={`w-[15rem] h-[12rem] relative mt-10 bg-gradient-to-b ${gradient} rounded-lg shadow-lg ml-5`}
-    >
-      <div
-        className={`absolute -top-4 left-[5rem] border bg-gradient-to-b ${gradient} rounded-full py-2 px-5 text-sm text-gray-800 font-semibold`}
-      >
-        {pill}
+    <div className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${gradient} p-6 shadow-lg transform transition-all duration-300 hover:scale-105 hover:shadow-2xl group`}>
+      {/* Decorative background pattern */}
+      <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white/10 rounded-full blur-xl transition-transform group-hover:scale-150"></div>
+      
+      <div className="relative z-10 flex justify-between items-start mb-4">
+        <div className="bg-white/20 backdrop-blur-md border border-white/20 rounded-lg px-3 py-1">
+          <span className="text-white text-sm font-semibold tracking-wide">{pill}</span>
+        </div>
+        <div className="bg-white/20 p-2 rounded-full backdrop-blur-sm">
+          <IconComponent className="text-white text-xl" />
+        </div>
       </div>
 
-      <div className="flex items-center justify-center h-full">
-        <h2 className="text-5xl font-bold text-white">{content}</h2>
+      <div className="relative z-10 mt-6">
+        <h2 className="text-4xl sm:text-5xl font-extrabold text-white mb-2">{content}</h2>
+        <p className="text-white/80 text-sm font-medium">{info}</p>
       </div>
-
-      <div className="absolute bottom-4 left-12 text-sm text-white">{info}</div>
     </div>
   );
 };

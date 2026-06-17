@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import Loader from "../../component/Loader";
 import { useProfileMutation } from "../../redux/api/users";
 import { setCredentials } from "../../redux/features/auth/authSlice";
+import { AiOutlineUser, AiOutlineMail, AiOutlineLock } from "react-icons/ai";
 
 const Profile = () => {
   const [username, setUsername] = useState("");
@@ -17,9 +17,11 @@ const Profile = () => {
     useProfileMutation();
 
   useEffect(() => {
-    setUsername(userInfo.username);
-    setEmail(userInfo.email);
-  }, [userInfo.email, userInfo.username]);
+    if (userInfo) {
+      setUsername(userInfo.username);
+      setEmail(userInfo.email);
+    }
+  }, [userInfo]);
 
   const dispatch = useDispatch();
 
@@ -27,7 +29,7 @@ const Profile = () => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      toast.error("Passwords do not match");
+      toast.error("Passwords do not match", { theme: "dark" });
     } else {
       try {
         const res = await updateProfile({
@@ -37,77 +39,117 @@ const Profile = () => {
           password,
         }).unwrap();
         dispatch(setCredentials({ ...res }));
-        toast.success("Profile updated successfully");
+        toast.success("Profile updated successfully", { theme: "dark" });
       } catch (err) {
-        toast.error(err?.data?.message || err.error);
+        toast.error(err?.data?.message || err.error, { theme: "dark" });
       }
     }
   };
 
   return (
-    <div>
-      <div className="container mx-auto p-4 mt-[10rem]">
-        <div className="flex justify-center align-center md:flex md:space-x-4">
-          <div className="md:w-1/3">
-            <h2 className="text-2xl font-semibold mb-4">Update Profile</h2>
+    <div className="min-h-[calc(100vh-6rem)] flex items-center justify-center p-4 relative overflow-hidden transition-colors duration-500 mt-5">
+      {/* Background Gradient Orbs */}
+      <div className="absolute top-1/3 left-1/3 w-96 h-96 bg-[#007aff]/10 dark:bg-[#00f2fe]/10 rounded-full blur-[100px] pointer-events-none transition-colors duration-500"></div>
 
-            <form onSubmit={submitHandler}>
-              <div className="mb-4">
-                <label className="block text-white mb-2">Name</label>
-                <input
-                  type="text"
-                  placeholder="Enter name"
-                  className="form-input p-4 rounded-sm w-full"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-white mb-2">Email Address</label>
-                <input
-                  type="email"
-                  placeholder="Enter email"
-                  className="form-input p-4 rounded-sm w-full"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-white mb-2">Password</label>
-                <input
-                  type="password"
-                  placeholder="Enter password"
-                  className="form-input p-4 rounded-sm w-full"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-white mb-2">
-                  Confirm Password
-                </label>
-                <input
-                  type="password"
-                  placeholder="Confirm Password"
-                  className="form-input p-4 rounded-sm w-full"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                />
-              </div>
-
-              <div className="flex justify-between">
-                <button
-                  type="submit"
-                  className="bg-teal-500 w-screen mt-[2rem] font-bold text-white py-2 px-4 rounded hover:bg-teal-600"
-                >
-                  Update
-                </button>
-
-                {loadingUpdateProfile && <Loader />}
-              </div>
-            </form>
+      <div className="w-full max-w-md liquid-glass rounded-2xl p-8 md:p-10 relative z-10 overflow-hidden animate-slide-up">
+        {/* Accent line */}
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#007aff] to-[#34c759] dark:from-[#00f2fe] dark:to-[#5856d6]"></div>
+        
+        <div className="flex flex-col items-center mb-8">
+          <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[#007aff] to-[#5856d6] dark:from-[#00f2fe] dark:to-[#8a2be2] flex items-center justify-center shadow-xl mb-4 transition-colors duration-500">
+             <span className="text-4xl font-bold text-white">
+                {userInfo?.username?.charAt(0).toUpperCase()}
+             </span>
           </div>
+          <h1 className="text-2xl font-extrabold text-gray-900 dark:text-white transition-colors duration-500">Your Profile</h1>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mt-1 transition-colors duration-500">Manage your account settings</p>
         </div>
+
+        <form onSubmit={submitHandler} className="space-y-5">
+          <div>
+            <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2 transition-colors duration-500">
+              Name
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <AiOutlineUser className="h-5 w-5 text-gray-400" />
+              </div>
+              <input
+                type="text"
+                className="w-full pl-10 pr-4 py-3 rounded-xl focus:outline-none transition-all"
+                placeholder="Enter name"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2 transition-colors duration-500">
+              Email Address
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <AiOutlineMail className="h-5 w-5 text-gray-400" />
+              </div>
+              <input
+                type="email"
+                className="w-full pl-10 pr-4 py-3 rounded-xl focus:outline-none transition-all"
+                placeholder="Enter email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2 transition-colors duration-500">
+              New Password
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <AiOutlineLock className="h-5 w-5 text-gray-400" />
+              </div>
+              <input
+                type="password"
+                className="w-full pl-10 pr-4 py-3 rounded-xl focus:outline-none transition-all"
+                placeholder="Leave blank to keep same"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2 transition-colors duration-500">
+              Confirm New Password
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <AiOutlineLock className="h-5 w-5 text-gray-400" />
+              </div>
+              <input
+                type="password"
+                className="w-full pl-10 pr-4 py-3 rounded-xl focus:outline-none transition-all"
+                placeholder="Confirm new password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <button
+            disabled={loadingUpdateProfile}
+            type="submit"
+            className="w-full bg-gradient-to-r from-[#007aff] to-[#34c759] dark:from-[#00f2fe] dark:to-[#5856d6] text-white font-bold py-3 px-4 rounded-xl hover:opacity-90 transition-all flex justify-center items-center shadow-lg mt-4"
+          >
+            {loadingUpdateProfile ? (
+              <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-white"></div>
+            ) : (
+              "Update Profile"
+            )}
+          </button>
+        </form>
       </div>
     </div>
   );

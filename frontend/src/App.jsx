@@ -5,13 +5,13 @@ import Navigation from "./pages/Auth/Navigation";
 
 const App = () => {
   return (
-    <>
-      <ToastContainer />
+    <div className="flex flex-col min-h-screen">
+      <ToastContainer theme="dark" position="top-right" autoClose={3000} hideProgressBar={false} />
       <Navigation />
-      <main className="py-3">
+      <main className="flex-grow pt-20">
         <Outlet />
       </main>
-    </>
+    </div>
   );
 };
 

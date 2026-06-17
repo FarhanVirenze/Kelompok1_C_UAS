@@ -1,59 +1,38 @@
-import { useState } from "react";
 import {
   useGetNewMoviesQuery,
   useGetTopMoviesQuery,
   useGetRandomMoviesQuery,
 } from "../../redux/api/movies";
-
-import { useFetchGenresQuery } from "../../redux/api/genre";
 import SliderUtil from "../../component/SliderUtil";
 
 const MoviesContainerPage = () => {
-  const { data } = useGetNewMoviesQuery();
+  const { data: newMovies } = useGetNewMoviesQuery();
   const { data: topMovies } = useGetTopMoviesQuery();
-  const { data: genres } = useFetchGenresQuery();
   const { data: randomMovies } = useGetRandomMoviesQuery();
 
-  const [selectedGenre, setSelectedGenre] = useState(null);
-
-  const handleGenreClick = (genreId) => {
-    setSelectedGenre(genreId);
-  };
-
-  const filteredMovies = data?.filter(
-    (movie) => selectedGenre === null || movie.genre === selectedGenre
-  );
-
   return (
-    <div className="flex flex-col lg:flex-row lg:justify-between items-center">
-      <nav className=" ml-[4rem] flex flex-row xl:flex-col lg:flex-col md:flex-row sm:flex-row">
-        {genres?.map((g) => (
-          <button
-            key={g._id}
-            className={`transition duration-300 ease-in-out hover:bg-gray-200 block p-2 rounded mb-[1rem] text-lg ${
-              selectedGenre === g._id ? "bg-gray-200" : ""
-            }`}
-            onClick={() => handleGenreClick(g._id)}
-          >
-            {g.name}
-          </button>
-        ))}
-      </nav>
-
-      <section className="flex flex-col justify-center items-center w-full lg:w-auto">
-        <div className="w-full lg:w-[100rem] mb-8 ">
-          <h1 className="mb-5">Choose For You</h1>
-          <SliderUtil data={randomMovies} />
+    <div className="flex flex-col gap-10">
+      {/* Movie Sections */}
+      <section className="flex flex-col gap-12 w-full animate-slide-up" style={{ animationDelay: '0.2s' }}>
+        <div className="w-full">
+          <h2 className="text-2xl font-black mb-6 text-black dark:text-white border-l-4 border-[#007aff] dark:border-[#00f2fe] pl-3 transition-colors duration-500">Top Movies</h2>
+          <div className="w-full">
+            <SliderUtil data={topMovies} />
+          </div>
         </div>
 
-        <div className="w-full lg:w-[100rem] mb-8">
-          <h1 className="mb-5">Top Movies</h1>
-          <SliderUtil data={topMovies} />
+        <div className="w-full">
+          <h2 className="text-2xl font-black mb-6 text-black dark:text-white border-l-4 border-[#5856d6] dark:border-[#8a2be2] pl-3 transition-colors duration-500">Chosen For You</h2>
+          <div className="w-full">
+            <SliderUtil data={randomMovies} />
+          </div>
         </div>
 
-        <div className="w-full lg:w-[100rem] mb-8">
-          <h1 className="mb-5">Choose Movie</h1>
-          <SliderUtil data={filteredMovies} />
+        <div className="w-full">
+          <h2 className="text-2xl font-black mb-6 text-black dark:text-white border-l-4 border-[#34c759] dark:border-[#00f2fe] pl-3 transition-colors duration-500">New Releases</h2>
+          <div className="w-full">
+            <SliderUtil data={newMovies} />
+          </div>
         </div>
       </section>
     </div>

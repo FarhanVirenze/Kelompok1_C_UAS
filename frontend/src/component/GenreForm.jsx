@@ -6,25 +6,26 @@ const GenreForm = ({
   handleDelete,
 }) => {
   return (
-    <div className="p-3">
-      <form onSubmit={handleSubmit} className="space-y-3">
+    <div className="w-full">
+      <form onSubmit={handleSubmit} className="space-y-4 w-full">
         <input
           type="text"
-          className="py-3 px-4 border rounded-lg w-[60rem]"
+          className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all duration-300"
           placeholder="Write genre name"
           value={value}
           onChange={(e) => setValue(e.target.value)}
         />
 
-        <div className="flex justify-between">
-          <button className="bg-teal-500 text-white py-2 px-4 rounded-lg hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-opacity-50">
+        <div className="flex flex-col sm:flex-row gap-3 mt-4">
+          <button className="flex-1 bg-gradient-to-r from-[#007aff] to-[#34c759] dark:from-[#00f2fe] dark:to-[#5856d6] text-white font-bold py-3 px-6 rounded-xl hover:opacity-90 transition-all shadow-lg">
             {buttonText}
           </button>
 
           {handleDelete && (
             <button
               onClick={handleDelete}
-              className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+              type="button"
+              className="flex-1 bg-gradient-to-r from-red-500 to-red-600 dark:from-red-600 dark:to-red-800 text-white font-bold py-3 px-6 rounded-xl hover:opacity-90 transition-all shadow-lg"
             >
               Delete
             </button>
